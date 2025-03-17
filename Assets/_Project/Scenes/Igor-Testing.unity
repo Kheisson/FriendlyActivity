@@ -131,7 +131,6 @@ GameObject:
   - component: {fileID: 176780809}
   - component: {fileID: 176780811}
   - component: {fileID: 176780810}
-  - component: {fileID: 176780813}
   - component: {fileID: 176780812}
   m_Layer: 0
   m_Name: Player
@@ -269,6 +268,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: f8ed0e89-ecf0-4222-8004-86f4891c4c2f
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 176780811}
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 4ae02cd8-39a3-4498-ae9b-6bf3b98eada3
+    m_ActionName: Player/Jump
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -284,7 +299,7 @@ CharacterController:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -313,7 +328,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterController: {fileID: 176780810}
   movementSpeed: 5
-  lookSensitivity: 1
+  jumpForce: 5
+  gravity: -9.81
 --- !u!114 &176780812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,68 +346,6 @@ MonoBehaviour:
   characterController: {fileID: 176780810}
   animationData: {fileID: 11400000, guid: d900a5567b4aa415096e3a365c6f988a, type: 2}
   inputManager: {fileID: 176780811}
-  groundedCheckDistance: 0.2
-  groundLayers:
-    serializedVersion: 2
-    m_Bits: 0
---- !u!54 &176780813
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 176780807}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!1 &202976945
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 202976946}
-  m_Layer: 0
-  m_Name: Terrain
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &202976946
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 202976945}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.9466268, y: 1.5425707, z: -1.4196901}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &599266059
 GameObject:
   m_ObjectHideFlags: 0
@@ -568,7 +522,7 @@ MonoBehaviour:
       Offset: {x: 0, y: 0}
   CenterOnActivate: 1
   TargetOffset: {x: 0, y: 1.75, z: 0}
-  Damping: {x: 0.5, y: 0.5}
+  Damping: {x: 1, y: 1}
   Lookahead:
     Enabled: 0
     Time: 0
@@ -822,7 +776,7 @@ GameObject:
   - component: {fileID: 1212165913}
   - component: {fileID: 1212165912}
   - component: {fileID: 1212165911}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6850,5 +6804,4 @@ SceneRoots:
   - {fileID: 599266061}
   - {fileID: 176780808}
   - {fileID: 753626553}
-  - {fileID: 202976946}
   - {fileID: 1212165914}

@@ -2,14 +2,12 @@ using UnityEngine;
 
 public class PlayerJumpState : PlayerState
 {
-    private float startJumpTime;
     private readonly float jumpForce = 10f; 
 
     public PlayerJumpState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
     {
-        startJumpTime = Time.time; 
         SetAnimationTrigger(_animationData.TriggerJumpName);
         _stateMachine.VerticalVelocity = jumpForce;
     }

@@ -8,12 +8,7 @@ public class PlayerStateMachine : MonoBehaviour, IInputListener
     [SerializeField] private PlayerAnimationData animationData;
     [SerializeField] private InputManager inputManager;
 
-    [Header("Settings")]
-    [SerializeField] private float groundedCheckDistance = 0.2f;
-    [SerializeField] private LayerMask groundLayers;
-
-    public Animator Animator { get => animator; }
-    public CharacterController CharacterController { get => characterController; }
+    public Animator Animator { get => animator; } 
     public PlayerAnimationData AnimationData { get => animationData; }
 
     // Input Values
@@ -34,11 +29,7 @@ public class PlayerStateMachine : MonoBehaviour, IInputListener
     {
         get
         {
-            Vector3 origin = transform.position + CharacterController.center;
-            Vector3 offset = new Vector3(0, CharacterController.height / 2, 0);
-            Ray ray = new Ray(origin + offset, Vector3.down);
-
-            return Physics.Raycast(ray, groundedCheckDistance, groundLayers);
+            return characterController.isGrounded;
         }
     }
 
@@ -77,16 +68,9 @@ public class PlayerStateMachine : MonoBehaviour, IInputListener
         MoveInput = moveInput;
     }
 
-    public void OnJump(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    public void OnJump(bool jumpInput)
     {
-        if (context.performed)
-        {
-            JumpInput = true;
-        }
-        else if (context.canceled)
-        {
-            JumpInput = false;
-        }
+        JumpInput = jumpInput;
     }
 
     public void OnSprint(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -94,13 +78,4 @@ public class PlayerStateMachine : MonoBehaviour, IInputListener
         IsSprinting = context.ReadValueAsButton();
     }
     #endregion
-
-    private void OnDrawGizmosSelected()
-    {
-        //TODO: Change this to Physics nonalloc method
-        Gizmos.color = Color.yellow;
-        Vector3 origin = transform.position + CharacterController.center;
-        Vector3 offset = new Vector3(0, CharacterController.height / 2, 0);
-        Gizmos.DrawRay(origin + offset, Vector3.down * groundedCheckDistance);
-    }
 }

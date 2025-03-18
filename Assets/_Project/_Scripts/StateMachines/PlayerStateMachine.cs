@@ -79,5 +79,7 @@ public class PlayerStateMachine : MonoBehaviour, IInputListener
         IsSprinting = sprintInput;
     }
     
+    public void OnCamera(bool isCamera){}
+    
     #endregion
 }

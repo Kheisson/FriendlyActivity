@@ -53,12 +53,13 @@ public class InputManager : MonoBehaviour
         if (context.performed)
         {
             usingCamera = true;
-            Fire();
         }
         else if (context.canceled)
         {
             usingCamera = false;
         }
+        
+        NotifyListeners(listener => listener.OnCamera(usingCamera));
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -115,18 +116,6 @@ public class InputManager : MonoBehaviour
         {
             isJumping = false;
             NotifyListeners(listener => listener.OnJump(isJumping));
-        }
-    }
-
-    #endregion
-
-    #region Firing
-
-    private void Fire()
-    {
-        if (usingCamera)
-        {
-            Debug.Log("Fire action triggered!");
         }
     }
 

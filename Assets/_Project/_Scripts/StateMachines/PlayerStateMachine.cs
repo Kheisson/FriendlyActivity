@@ -63,6 +63,7 @@ public class PlayerStateMachine : MonoBehaviour, IInputListener
     }
 
     #region Input Event Handlers
+    
     public void OnMove(Vector2 moveInput)
     {
         MoveInput = moveInput;
@@ -73,9 +74,10 @@ public class PlayerStateMachine : MonoBehaviour, IInputListener
         JumpInput = jumpInput;
     }
 
-    public void OnSprint(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    public void OnSprint(bool sprintInput)
     {
-        IsSprinting = context.ReadValueAsButton();
+        IsSprinting = sprintInput;
     }
+    
     #endregion
 }

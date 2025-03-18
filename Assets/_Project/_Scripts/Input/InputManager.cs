@@ -7,15 +7,20 @@ public class InputManager : MonoBehaviour
     [Header("Player Settings")] [SerializeField]
     private CharacterController characterController;
 
-    [SerializeField] private float movementSpeed = 5f;
-    [SerializeField] private float jumpForce = 5f;
-    [SerializeField] private float gravity = -9.81f;
+    private readonly float movementSpeed = 5f;
+    private readonly float jumpForce = 5f;
+    private readonly float gravity = -9.81f;
 
     private Vector2 moveInput;
-    private bool isFiring;
+    private bool usingCamera;
     private bool isJumping;
+    private bool isSprinting;
     private float verticalVelocity;
     private readonly List<IInputListener> inputListeners = new();
+
+    private const float GROUNDED_VERTICAL_VELOCITY = -2f;
+
+    private float MovementSpeed => isSprinting ? movementSpeed * 2 : movementSpeed;
 
     private void Update()
     {
@@ -36,27 +41,23 @@ public class InputManager : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
-
-        foreach (var listener in inputListeners)
-        {
-            listener.OnMove(moveInput);
-        }
+        NotifyListeners(listener => listener.OnMove(moveInput));
     }
 
     public void OnLook(InputAction.CallbackContext context)
     {
     }
 
-    public void OnFire(InputAction.CallbackContext context)
+    public void OnCamera(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            isFiring = true;
+            usingCamera = true;
             Fire();
         }
         else if (context.canceled)
         {
-            isFiring = false;
+            usingCamera = false;
         }
     }
 
@@ -66,12 +67,22 @@ public class InputManager : MonoBehaviour
         {
             isJumping = true;
             verticalVelocity = jumpForce;
-
-            foreach (var listener in inputListeners)
-            {
-                listener.OnJump(isJumping);
-            }
+            NotifyListeners(listener => listener.OnJump(isJumping));
         }
+    }
+
+    public void OnSprint(InputAction.CallbackContext context)
+    {
+        if (context.performed && characterController.isGrounded && moveInput != Vector2.zero)
+        {
+            isSprinting = true;
+        }
+        else if (context.canceled)
+        {
+            isSprinting = false;
+        }
+
+        NotifyListeners(listener => listener.OnSprint(isSprinting));
     }
 
     #endregion
@@ -81,13 +92,9 @@ public class InputManager : MonoBehaviour
     private void HandleMovement()
     {
         var moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
-        moveDirection = transform.TransformDirection(moveDirection);
-        moveDirection *= movementSpeed;
+        moveDirection = transform.TransformDirection(moveDirection) * MovementSpeed;
 
-        if (characterController != null)
-        {
-            characterController.Move(moveDirection * Time.deltaTime);
-        }
+        characterController?.Move(moveDirection * Time.deltaTime);
     }
 
     private void HandleJumping()
@@ -98,20 +105,16 @@ public class InputManager : MonoBehaviour
         }
         else if (verticalVelocity < 0)
         {
-            verticalVelocity = -2f; 
+            verticalVelocity = GROUNDED_VERTICAL_VELOCITY;
         }
 
         Vector3 move = new Vector3(0, verticalVelocity, 0);
-        characterController.Move(move * Time.deltaTime);
+        characterController?.Move(move * Time.deltaTime);
 
-        if (characterController.isGrounded)
+        if (characterController != null && characterController.isGrounded)
         {
             isJumping = false;
-            
-            foreach (var listener in inputListeners)
-            {
-                listener.OnJump(isJumping);
-            }
+            NotifyListeners(listener => listener.OnJump(isJumping));
         }
     }
 
@@ -121,11 +124,19 @@ public class InputManager : MonoBehaviour
 
     private void Fire()
     {
-        if (isFiring)
+        if (usingCamera)
         {
             Debug.Log("Fire action triggered!");
         }
     }
 
     #endregion
+
+    private void NotifyListeners(System.Action<IInputListener> action)
+    {
+        foreach (var listener in inputListeners)
+        {
+            action(listener);
+        }
+    }
 }
